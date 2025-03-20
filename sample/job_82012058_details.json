@@ -1,0 +1,86 @@
+{
+  "data": {
+    "jobDetails": {
+      "job": {
+        "sourceZone": "asia-1",
+        "tracking": {
+          "adProductType": null,
+          "classificationInfo": {
+            "classificationId": "6123",
+            "classification": "Education & Training",
+            "subClassificationId": "6137",
+            "subClassification": "Tutoring",
+            "__typename": "JobTrackingClassificationInfo"
+          },
+          "hasRoleRequirements": false,
+          "isPrivateAdvertiser": false,
+          "locationInfo": {
+            "area": null,
+            "location": null,
+            "locationIds": [
+              "1000137"
+            ],
+            "__typename": "JobTrackingLocationInfo"
+          },
+          "workTypeIds": "243",
+          "postedTime": "1d ago",
+          "__typename": "JobTracking"
+        },
+        "id": "82012058",
+        "title": "兼職數學專科班導師  (小學/中學)",
+        "phoneNumber": null,
+        "isExpired": false,
+        "expiresAt": {
+          "dateTimeUtc": "2025-03-14T12:59:59.999Z",
+          "__typename": "SeekDateTime"
+        },
+        "isLinkOut": true,
+        "contactMatches": [],
+        "isVerified": true,
+        "abstract": "教授6-8人小組數學專科班，批改堂課及家課",
+        "content": "<p><strong>要求：</strong></p><ul><li>大學或以上程度；</li><li>擁有組織能力及邏輯思維，具小組教學經驗者優先考慮；</li><li>HKDSE數學科必須達4級或以上。</li></ul><p><strong>職責：</strong></p><ul><li>教授6-8人小組數學專科班，批改堂課及家課；</li><li>有效控制課堂秩序，有需要時與家長聯絡。</li></ul>",
+        "status": "Active",
+        "listedAt": {
+          "label": "1d ago",
+          "dateTimeUtc": "2025-02-12T02:25:10.347Z",
+          "__typename": "SeekDateTime"
+        },
+        "salary": null,
+        "shareLink": "https://hk.jobsdb.com/job/82012058?tracking=SHR-WEB-SharedJob-asia-1",
+        "workTypes": {
+          "label": "Part time",
+          "__typename": "JobWorkTypes"
+        },
+        "advertiser": {
+          "id": "62805929",
+          "name": "Evergreen Way Education Centre Limited",
+          "isVerified": null,
+          "registrationDate": {
+            "dateTimeUtc": "2024-12-10T02:47:14.025Z",
+            "__typename": "SeekDateTime"
+          },
+          "__typename": "Advertiser"
+        },
+        "location": {
+          "label": "Tseung Kwan O, Sai Kung District",
+          "__typename": "LocationInfo"
+        },
+        "classifications": [
+          {
+            "label": "Tutoring (Education & Training)",
+            "__typename": "ClassificationInfo"
+          }
+        ],
+        "products": {
+          "branding": null,
+          "bullets": null,
+          "questionnaire": null,
+          "video": null,
+          "__typename": "JobProducts"
+        },
+        "__typename": "Job"
+      },
+      "__typename": "JobDetails"
+    }
+  }
+}

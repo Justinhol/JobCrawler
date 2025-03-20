@@ -1,0 +1,121 @@
+{
+  "data": {
+    "jobDetails": {
+      "job": {
+        "sourceZone": "asia-1",
+        "tracking": {
+          "adProductType": null,
+          "classificationInfo": {
+            "classificationId": "6281",
+            "classification": "Information & Communication Technology",
+            "subClassificationId": "6283",
+            "subClassification": "Business/Systems Analysts",
+            "__typename": "JobTrackingClassificationInfo"
+          },
+          "hasRoleRequirements": true,
+          "isPrivateAdvertiser": false,
+          "locationInfo": {
+            "area": null,
+            "location": null,
+            "locationIds": [
+              "1000152"
+            ],
+            "__typename": "JobTrackingLocationInfo"
+          },
+          "workTypeIds": "242",
+          "postedTime": "19h ago",
+          "__typename": "JobTracking"
+        },
+        "id": "82023576",
+        "title": "System Analyst (Project / Vendor management)",
+        "phoneNumber": null,
+        "isExpired": false,
+        "expiresAt": {
+          "dateTimeUtc": "2025-03-14T12:59:59.999Z",
+          "__typename": "SeekDateTime"
+        },
+        "isLinkOut": false,
+        "contactMatches": [
+          {
+            "type": "Email",
+            "value": "applyjob@clts.com",
+            "__typename": "ContactMatches"
+          }
+        ],
+        "isVerified": true,
+        "abstract": "Provide support to related projects to ensure the timeliness and quality of the deliverables",
+        "content": "<p>Job Description: </p><ul><li>To provide support to related projects to ensure the timeliness and quality of the deliverables</li><li>To provide on-going maintenance support to existing application systems etc.</li><li>To forecast and engage project resources for projects</li><li>To provide advice, support and coordination in different stages of active projects and existing systems, e.g. enhancement and security audit etc.</li><li>To manage and coordinate with IT contractors and related parties in supporting new projects and existing systems.</li><li>To provide on-call support to tackle urgent system and application incidents for the supported systems. </li></ul><p>Requirements: </p><ul><li>Higher Diploma or above in Computer Science </li><li>At least 4 years in IT industry</li><li>2 years solid experience in system implementation and maintenance/ support </li><li>2 years solid experience in Project Management &amp; IT Service/ Outsourcing Management</li><li>Good communication skills</li><li>Good command in spoken and written English and Chinese</li></ul><p>If interested for the above position, please send detailed resume with current and expected salary as well as date of availability by sending email to <strong>applyjob@clts.com</strong></p><p> </p><p>For more job opportunity, please visit our website: www.clts.com</p><p> </p><p>The personal information is collected strictly for recruitment purpose only.</p>",
+        "status": "Active",
+        "listedAt": {
+          "label": "19h ago",
+          "dateTimeUtc": "2025-02-12T07:19:34.669Z",
+          "__typename": "SeekDateTime"
+        },
+        "salary": {
+          "currencyLabel": null,
+          "label": "$40,000 – $60,000 per month",
+          "__typename": "JobSalary"
+        },
+        "shareLink": "https://hk.jobsdb.com/job/82023576?tracking=SHR-WEB-SharedJob-asia-1",
+        "workTypes": {
+          "label": "Full time",
+          "__typename": "JobWorkTypes"
+        },
+        "advertiser": {
+          "id": "60186340",
+          "name": "CL Technical Services Ltd.",
+          "isVerified": true,
+          "registrationDate": {
+            "dateTimeUtc": "2010-01-22T11:26:54.207Z",
+            "__typename": "SeekDateTime"
+          },
+          "__typename": "Advertiser"
+        },
+        "location": {
+          "label": "Wan Chai, Wan Chai District",
+          "__typename": "LocationInfo"
+        },
+        "classifications": [
+          {
+            "label": "Business/Systems Analysts (Information & Communication Technology)",
+            "__typename": "ClassificationInfo"
+          }
+        ],
+        "products": {
+          "branding": {
+            "id": "8380665c-ff83-4c05-92fe-d3d9cbe5c33a.1",
+            "cover": {
+              "url": "https://image-service-cdn.seek.com.au/ef6196469d2ab517c7e8b6132d82ab48f8739623/c75c134621ec0d168d2953a39cc7a2f7bb16ec7c",
+              "__typename": "JobProductBrandingImage"
+            },
+            "thumbnailCover": {
+              "url": "https://image-service-cdn.seek.com.au/ef6196469d2ab517c7e8b6132d82ab48f8739623/bcba8b096f22480eb124c9c8bc9f61ae9d01d7ae",
+              "__typename": "JobProductBrandingImage"
+            },
+            "logo": {
+              "url": "https://image-service-cdn.seek.com.au/b8d3c0de300660674b1a3781b15758f05f051230/f3c5292cec0e05e4272d9bf9146f390d366481d0",
+              "__typename": "JobProductBrandingImage"
+            },
+            "__typename": "JobProductBranding"
+          },
+          "bullets": [
+            "Work for public sector",
+            "Project Management",
+            "IT Service/ Outsourcing Management"
+          ],
+          "questionnaire": {
+            "questions": [
+              "Which of the following statements best describes your right to work in Hong Kong?",
+              "What's your expected monthly basic salary?"
+            ],
+            "__typename": "JobQuestionnaire"
+          },
+          "video": null,
+          "__typename": "JobProducts"
+        },
+        "__typename": "Job"
+      },
+      "__typename": "JobDetails"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "data": {
+    "jobDetails": {
+      "job": {
+        "sourceZone": "asia-1",
+        "tracking": {
+          "adProductType": null,
+          "classificationInfo": {
+            "classificationId": "6123",
+            "classification": "Education & Training",
+            "subClassificationId": "6137",
+            "subClassification": "Tutoring",
+            "__typename": "JobTrackingClassificationInfo"
+          },
+          "hasRoleRequirements": true,
+          "isPrivateAdvertiser": false,
+          "locationInfo": {
+            "area": null,
+            "location": null,
+            "locationIds": [
+              "1000131"
+            ],
+            "__typename": "JobTrackingLocationInfo"
+          },
+          "workTypeIds": "242",
+          "postedTime": "17h ago",
+          "__typename": "JobTracking"
+        },
+        "id": "82028649",
+        "title": "全職(中文科/英文科/數學科）資深導師 Chinese/English/Math teacher/tutor/Full time",
+        "phoneNumber": null,
+        "isExpired": false,
+        "expiresAt": {
+          "dateTimeUtc": "2025-03-14T12:59:59.999Z",
+          "__typename": "SeekDateTime"
+        },
+        "isLinkOut": false,
+        "contactMatches": [],
+        "isVerified": true,
+        "abstract": " 博學國際旗下的博學中文、博學英數、博學國際升學顧問中心遍佈香港港島區及九龍區，提供幼兒到高中一條龍升學及學科提升課程，以及留學、高等教育輔導課程，並是香港唯一配備心理健康專家護航及就業、創業頂尖規劃的教育平臺。師資、課程及校舍設備等均在香港業界領先，且各校舍均取得由香港教育局發出的正規學校執照。",
+        "content": "<p><strong>博學國際教育集團（香港）Devoted Education Group(HK)</strong><br />        2004年成立於香港，定位于以學生全面成長為核心，以教育研究為驅動力的綜合性教育集團，也是香港最具規模的教育平臺之一。<br />       博學國際彙聚一眾高學歷、經驗豐富的教育顧問和專業老師，每一位都以教育為自身信念，憑藉廣博精神的知識、嚴謹負責的態度，實現由心出發的教育，齊力讓每個受教育的個體身心健康地奔向更廣的未來。<br />      博學國際旗下的<strong>博學中文、博學英數、博學國際升學顧問中心</strong>遍佈香港港島區及九龍區，提供幼兒到高中一條龍升學及學科提升課程，以及留學、高等教育輔導課程，並是香港唯一配備心理健康專家護航及就業、創業頂尖規劃的教育平臺。師資、課程及校舍設備等均在香港業界領先，且各校舍均取得由香港教育局發出的正規學校執照。<br /><br /><br />工作範疇:<br /><strong>•1. 教授小學或中學本地/國際學校中文/英文/數學科（廣東話/普通話/英文皆可）（K1-F6）</strong><br />• 2. 協助製作教材<br />• 3. 定期家教溝通，讓家長了解教學進度<br />• 4. 協助日常基本校務工作</p><p><br /><strong>工作要求:</strong><br /><strong>1. 具備最少一年教授小學或中學相關科目經驗優先</strong><br />（備註：應屆畢業生具教育中心經驗者也會考慮）<br /><strong>2. 需能以流利廣東話/普通話/英文溝通及授課</strong><br /><strong>3. 對應相關學科學士學位或以上學歷</strong><br />4.熟悉香港本地/國際學校教學（呈分試、DSE、IB、IGCSE）<br />5.良好溝通技巧及團隊合作精神<br />6. 性格上進及具責任感<br /><br /><br />工作地點: 各區（炮台山 / 銅鑼灣 / 太子 / 九龍灣 / 將軍澳 / 沙田）<br /><br /><br />基本福利待遇：<br />1.享有全年公衆假期（「銀行假」）、有薪年假、產假、病假<br />2.按法定要求供MPF<br />3.屬教育局註冊私人學校，跟隨教育局指引及勞工法正規管理<br />4.購買勞工保險，受勞工法保障<br />5.優秀教學團隊，提供職前及在職培訓<br /><br />額外待遇:<br />1. 每月教學表現可獲豐厚業績獎金、勤工獎<br />2.可根據個人特殊情況協商調整工作時間<br />3.教職員子女享有優先學位及報讀優惠<br />4.對教育熱忱且表現優異者可發展成爲合作伙伴<br /><br />歡迎有教學理想的你加入我們的團隊，請透過電子郵件發送您的履歷，附上您的預期薪水。</p><p>所有收集到的資訊將按照保密原則處理，並僅用於招聘目的。</p><p>歡迎瀏覽博學中文網站https://dec.edu.hk/瞭解更多。</p><p><br /><br /> </p><p> </p>",
+        "status": "Active",
+        "listedAt": {
+          "label": "17h ago",
+          "dateTimeUtc": "2025-02-12T10:01:02.094Z",
+          "__typename": "SeekDateTime"
+        },
+        "salary": null,
+        "shareLink": "https://hk.jobsdb.com/job/82028649?tracking=SHR-WEB-SharedJob-asia-1",
+        "workTypes": {
+          "label": "Full time",
+          "__typename": "JobWorkTypes"
+        },
+        "advertiser": {
+          "id": "61350756",
+          "name": "博學國際教育集團（香港）有限公司",
+          "isVerified": true,
+          "registrationDate": {
+            "dateTimeUtc": "2016-08-29T07:05:50.657Z",
+            "__typename": "SeekDateTime"
+          },
+          "__typename": "Advertiser"
+        },
+        "location": {
+          "label": "Kowloon Bay, Kwun Tong District",
+          "__typename": "LocationInfo"
+        },
+        "classifications": [
+          {
+            "label": "Tutoring (Education & Training)",
+            "__typename": "ClassificationInfo"
+          }
+        ],
+        "products": {
+          "branding": {
+            "id": "f661f484-42b3-4309-9fe9-db71ab53d21c.1",
+            "cover": {
+              "url": "https://image-service-cdn.seek.com.au/147220efdc102889a00bfac4550543bdf03e8255/a868bcb8fbb284f4e8301904535744d488ea93c1",
+              "__typename": "JobProductBrandingImage"
+            },
+            "thumbnailCover": {
+              "url": "https://image-service-cdn.seek.com.au/147220efdc102889a00bfac4550543bdf03e8255/a868bcb8fbb284f4e8301904535744d488ea93c1",
+              "__typename": "JobProductBrandingImage"
+            },
+            "logo": {
+              "url": "https://image-service-cdn.seek.com.au/b7446581da1c6f7e8fa4ec2b1ad67820c448ac3e/ee4dce1061f3f616224767ad58cb2fc751b8d2dc",
+              "__typename": "JobProductBrandingImage"
+            },
+            "__typename": "JobProductBranding"
+          },
+          "bullets": [
+            "專科專教，薪金豐厚",
+            "良好晉升機會",
+            "靈活的工作時間"
+          ],
+          "questionnaire": {
+            "questions": [
+              "Which of the following statements best describes your right to work in Hong Kong?",
+              "What's your expected monthly basic salary?",
+              "How many years' experience do you have as a Mathematics Teacher?",
+              "Which of the following languages are you fluent in?"
+            ],
+            "__typename": "JobQuestionnaire"
+          },
+          "video": null,
+          "__typename": "JobProducts"
+        },
+        "__typename": "Job"
+      },
+      "__typename": "JobDetails"
+    }
+  }
+}
