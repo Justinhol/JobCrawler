@@ -27,9 +27,9 @@ class CrawlerConfig:
     def __init__(
         self,
         num_threads=6,            # 并发线程数
-        user_switch_freq=3000,       # 用户切换频率
+        user_switch_freq=500,       # 用户切换频率
         page_progress_step=10,     # 页面进度打印间隔
-        job_progress_step=500,      # 职位进度打印间隔
+        job_progress_step=100,      # 职位进度打印间隔（改为100，更频繁）
         log_level="INFO",          # 日志级别
         log_to_file=True           # 是否输出到文件
     ):
@@ -176,25 +176,30 @@ class JobsDBCrawler:
         logger.info(
             f"开始抓取 {len(self.all_ids)} 个职位，已去重 {len_before - len(self.all_ids)} 个")
 
-        # 处理阶段
+        # 处理阶段 - 第一轮不重试，直接记录失败
+        logger.info("开始第一轮处理（快速模式，失败直接记录）")
         total_success, all_failed_ids = self.process_jobs_with_configpool(
             self.all_ids,
             original_data_folder,
-            max_retries=1
+            max_retries=1,  # 不在内部重试
+            is_retry=False
         )
 
+        # 只有存在失败的职位才进行统一重试
         if all_failed_ids:
-            logger.info(f"开始重试失败的 {len(all_failed_ids)} 个职位")
+            logger.info(f"第一轮完成，开始统一重试失败的 {len(all_failed_ids)} 个职位")
             retry_success, final_failed_ids = self.process_jobs_with_configpool(
                 all_failed_ids,
                 original_data_folder,
-                max_retries=1,
+                max_retries=1,  # 重试阶段也只重试一次
                 is_retry=True
             )
             total_success += retry_success
             all_failed_ids = final_failed_ids
             logger.info(
-                f"重试结果: 成功 {retry_success} 个，仍失败 {len(final_failed_ids)} 个")
+                f"重试结果: 成功 {retry_success} 个，最终失败 {len(final_failed_ids)} 个")
+        else:
+            logger.info("第一轮处理全部成功，无需重试")
 
         # 记录失败的ID
         if all_failed_ids:
@@ -317,7 +322,7 @@ class JobsDBCrawler:
         return config_pool
 
     def process_jobs_with_configpool(self, job_ids, original_data_folder, max_retries=1, is_retry=False):
-        """使用配置池处理职位（模拟多线程）"""
+        """使用配置池处理职位（优化版本）"""
         total_success = 0
         all_failed_ids = []
 
@@ -328,88 +333,180 @@ class JobsDBCrawler:
         # 计数器和进度跟踪
         total_processed = 0
         start_time = time.time()
+        timeout_count = 0  # 添加超时计数器
+        failed_count = 0   # 添加失败计数器
 
-        for attempt in range(max_retries):
-            logger.info(f"\n{'重试' if is_retry else '处理'}阶段（第{attempt+1}次尝试）")
+        logger.info(f"\n{'重试' if is_retry else '处理'}阶段开始")
+        logger.info(f"任务总数: {len(job_ids)}, 配置池大小: {pool_size}")
+        if not is_retry:
+            logger.info("第一轮处理：6秒超时，快速跳过阻塞请求")
+        else:
+            logger.info("重试阶段：20秒超时，更充分的重试机会")
 
-            # 设定配置池刷新计数器
-            pool_refresh_counter = 0
+        # 设定配置池刷新计数器
+        pool_refresh_counter = 0
 
-            for idx, job_id in enumerate(job_ids):
-                # 选择当前使用的配置
-                config_idx = idx % pool_size
-                current_config = user_config_pool[config_idx]
+        for idx, job_id in enumerate(job_ids):
+            # 选择当前使用的配置
+            config_idx = idx % pool_size
+            current_config = user_config_pool[config_idx]
 
-                # 计算请求时间间隔，模拟多线程效果
-                scheduled_time = start_time + (idx * 0.5)
-                if (delay := scheduled_time - time.time()) > 0:
-                    time.sleep(delay)
+            # 计算请求时间间隔 - 改为0.1秒
+            scheduled_time = start_time + (idx * 0.1)
+            if (delay := scheduled_time - time.time()) > 0:
+                time.sleep(delay)
 
-                # 每个配置计数
-                current_config['request_count'] += 1
-                pool_refresh_counter += 1
+            # 每个配置计数
+            current_config['request_count'] += 1
+            pool_refresh_counter += 1
 
-                # 每到指定次数刷新整个配置池
-                if pool_refresh_counter >= self.config.user_switch_freq:
-                    logger.info("刷新用户配置池")
-                    user_config_pool = self.create_user_config_pool()
-                    pool_refresh_counter = 0
+            # 每500个任务刷新整个配置池
+            if pool_refresh_counter >= 500:
+                logger.info(f"已处理 {idx} 个任务，刷新用户配置池")
+                user_config_pool = self.create_user_config_pool()
+                pool_refresh_counter = 0
 
-                # 处理单个职位
-                original_data_path = Path(original_data_folder)
-                final_path = original_data_path / f'{job_id}.json'
-                temp_path = original_data_path / f'{job_id}.tmp'  # 临时文件路径
+            # 处理单个职位
+            success = self._process_single_job(
+                job_id, original_data_folder, current_config, idx, is_retry, failed_count + 1)
+            if success:
+                total_success += 1
+            else:
+                failed_count += 1  # 增加失败计数
+                all_failed_ids.append(job_id)
+                # 记录失败信息，包含失败序号
+                if not is_retry:  # 第一轮处理
+                    logger.debug(f"第{failed_count}个失败: 职位 {job_id} (第一轮)")
+                else:  # 重试阶段
+                    logger.debug(f"第{failed_count}个失败: 职位 {job_id} (重试后)")
 
-                try:
-                    # 创建伪线程爬虫对象，传递当前配置
-                    pseudo_crawler = PseudoThreadedCrawler(current_config)
+                # 每10个失败记录一次汇总
+                if failed_count % 10 == 0:
+                    failed_rate = (failed_count / total_processed) * 100
+                    logger.info(
+                        f"失败汇总: 已失败 {failed_count} 个，当前失败率 {failed_rate:.1f}%")
 
-                    data = get_job_details(job_id, pseudo_crawler)
-                    if data and data.get('data', {}).get('jobDetails', {}).get('job'):
-                        # 删除可能存在的旧文件
-                        for path in [temp_path, final_path]:
-                            if path.exists():
-                                path.unlink()
+            # 更新进度 - 增加详细信息
+            total_processed += 1
+            if total_processed % self.config.job_progress_step == 0:
+                elapsed = time.time() - start_time
+                rate = total_processed / elapsed if elapsed > 0 else 0
+                eta = (len(job_ids) - total_processed) / \
+                    rate if rate > 0 else "未知"
+                success_rate = (total_success / total_processed) * 100
+                failed_rate = (
+                    (total_processed - total_success) / total_processed) * 100
 
-                        # 先写入临时文件
-                        with open(temp_path, 'w', encoding='utf-8') as f:
-                            json.dump(data, f, ensure_ascii=False, indent=2)
-                            f.flush()  # 确保写入完成
-                            os.fsync(f.fileno())  # 确保数据刷新到磁盘
+                progress_msg = (f"总进度: {total_processed}/{len(job_ids)} ({total_processed/len(job_ids)*100:.1f}%) - "
+                                f"成功率: {success_rate:.1f}% - 失败: {failed_count}个({failed_rate:.1f}%) - "
+                                f"速度: {rate:.2f}/秒 - 预计剩余: {eta:.0f}秒")
 
-                        # 完成后重命名为最终文件
-                        temp_path.rename(final_path)
+                if not is_retry:
+                    progress_msg += f" - 6秒超时策略"
 
-                        # 验证文件是否正确写入
-                        if final_path.exists() and final_path.stat().st_size > 0:
-                            total_success += 1
-                        else:
-                            all_failed_ids.append(job_id)
-                    else:
-                        # 删除可能存在的无效文件
-                        for path in [temp_path, final_path]:
-                            if path.exists():
-                                path.unlink()
-                        all_failed_ids.append(job_id)
-                except Exception as e:
-                    # 清理临时文件和可能的部分写入文件
-                    for path in [temp_path, final_path]:
-                        if path.exists():
-                            path.unlink()
-                    all_failed_ids.append(job_id)
-                    logger.error(
-                        f"{len(all_failed_ids)}: 处理职位 {job_id} 失败: {str(e)}")
+                logger.info(progress_msg)
 
-                # 更新进度
-                total_processed += 1
-                if total_processed % self.config.job_progress_step == 0:
-                    logger.info(f"总进度: {total_processed}/{len(job_ids)}")
-
-            # 第一轮处理完成后，如果没有失败的职位，则不需要第二轮
-            if not all_failed_ids:
-                break
+        # 处理阶段结束统计
+        final_success_rate = (total_success / len(job_ids)) * \
+            100 if len(job_ids) > 0 else 0
+        stage_name = "重试阶段" if is_retry else "第一轮处理"
+        logger.info(
+            f"{stage_name}完成: 成功 {total_success}个, 失败 {failed_count}个, 成功率 {final_success_rate:.1f}%")
 
         return total_success, all_failed_ids
+
+    def _process_single_job(self, job_id, original_data_folder, current_config, idx, is_retry=False, potential_fail_number=None):
+        """处理单个职位（提取为独立方法）"""
+        original_data_path = Path(original_data_folder)
+        final_path = original_data_path / f'{job_id}.json'
+        temp_path = original_data_path / f'{job_id}.tmp'
+
+        try:
+            # 创建伪线程爬虫对象，传递当前配置
+            pseudo_crawler = PseudoThreadedCrawler(current_config)
+
+            # 记录请求开始时间
+            request_start = time.time()
+
+            # 根据是否重试设置不同的超时时间
+            if is_retry:
+                # 重试阶段使用较长的超时时间（20秒）
+                timeout = 20
+                data = get_job_details(job_id, pseudo_crawler, timeout=timeout)
+            else:
+                # 第一轮处理使用6秒超时，快速跳过阻塞请求
+                timeout = 6
+                data = get_job_details(job_id, pseudo_crawler, timeout=timeout)
+
+            request_duration = time.time() - request_start
+
+            # 记录超长请求
+            if request_duration > timeout:
+                fail_msg = f"职位 {job_id} 请求超时 {request_duration:.2f}秒 (超时设置: {timeout}秒)"
+                if potential_fail_number:
+                    fail_msg = f"第{potential_fail_number}个失败: " + fail_msg
+                logger.warning(fail_msg)
+                return False
+            elif request_duration > (timeout * 0.8):  # 超过80%的超时时间就警告
+                logger.warning(
+                    f"职位 {job_id} 请求耗时 {request_duration:.2f}秒 (接近超时)")
+
+            if data and data.get('data', {}).get('jobDetails', {}).get('job'):
+                # 删除可能存在的旧文件
+                for path in [temp_path, final_path]:
+                    if path.exists():
+                        path.unlink()
+
+                # 先写入临时文件
+                with open(temp_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+                    f.flush()
+                    os.fsync(f.fileno())
+
+                # 完成后重命名为最终文件
+                temp_path.rename(final_path)
+
+                # 验证文件是否正确写入
+                if final_path.exists() and final_path.stat().st_size > 0:
+                    if not is_retry and request_duration > 3:  # 第一轮超过3秒记录
+                        logger.debug(
+                            f"职位 {job_id} 处理成功但较慢: {request_duration:.2f}秒")
+                    return True
+                else:
+                    fail_msg = f"职位 {job_id} 文件写入验证失败"
+                    if potential_fail_number:
+                        fail_msg = f"第{potential_fail_number}个失败: " + fail_msg
+                    logger.warning(fail_msg)
+                    return False
+            else:
+                fail_msg = f"职位 {job_id} 数据获取失败或无效 (耗时: {request_duration:.2f}秒)"
+                if is_retry:
+                    fail_msg = f"职位 {job_id} 重试后仍获取失败"
+                if potential_fail_number:
+                    fail_msg = f"第{potential_fail_number}个失败: " + fail_msg
+                logger.debug(fail_msg)
+                return False
+
+        except Exception as e:
+            # 清理临时文件和可能的部分写入文件
+            for path in [temp_path, final_path]:
+                if path.exists():
+                    path.unlink()
+
+            # 区分超时和其他异常
+            if "timeout" in str(e).lower() or "timed out" in str(e).lower():
+                fail_msg = f"职位 {job_id} 网络超时，自动跳过: {str(e)}"
+            else:
+                fail_msg = f"职位 {job_id} 处理异常: {str(e)}"
+
+            if potential_fail_number:
+                fail_msg = f"第{potential_fail_number}个失败: " + fail_msg
+
+            if "timeout" in str(e).lower() or "timed out" in str(e).lower():
+                logger.warning(fail_msg)
+            else:
+                logger.debug(fail_msg)
+            return False
 
     def rename_csv_file(self, folder_name):
         # 使用原子方式重命名

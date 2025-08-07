@@ -20,13 +20,14 @@ def safe_get(data: Optional[Dict[str, Any]], *keys: str, default: Any = "未提�
     return current
 
 
-def get_job_details(job_id, threaded_crawler):
+def get_job_details(job_id, threaded_crawler, timeout=30):
     """
     通过GraphQL API获取指定职位ID的详细信息
 
     参数:
         job_id: 职位ID
         threaded_crawler: 提供用户信息的爬虫对象
+        timeout: 请求超时时间（秒），默认30秒
 
     返回:
         成功时返回JSON格式的职位详情,失败时返回None
@@ -177,7 +178,13 @@ def get_job_details(job_id, threaded_crawler):
             "query": query
         }
 
-        response = requests.post(url, json=payload, headers=headers)
+        # 添加超时设置，防止网络请求阻塞
+        response = requests.post(
+            url,
+            json=payload,
+            headers=headers,
+            timeout=(5, timeout)  # 连接超时5秒，读取超时为传入的timeout参数
+        )
 
         # 保留频率限制检查
         if response.status_code == 429:
@@ -189,8 +196,17 @@ def get_job_details(job_id, threaded_crawler):
         response.raise_for_status()
         return response.json()
 
+    except requests.exceptions.Timeout as e:
+        logger.warning(f"职位 {job_id} 请求超时: {str(e)}")
+        return None
+    except requests.exceptions.ConnectionError as e:
+        logger.warning(f"职位 {job_id} 连接错误: {str(e)}")
+        return None
     except requests.RequestException as e:
-        logger.error(f"请求失败: {str(e)}")
+        logger.error(f"职位 {job_id} 请求失败: {str(e)}")
+        return None
+    except Exception as e:
+        logger.error(f"职位 {job_id} 处理异常: {str(e)}")
         return None
 
 
