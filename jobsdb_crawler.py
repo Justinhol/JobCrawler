@@ -447,9 +447,6 @@ class JobsDBCrawler:
                     fail_msg = f"第{potential_fail_number}个失败: " + fail_msg
                 logger.warning(fail_msg)
                 return False
-            elif request_duration > (timeout * 0.8):  # 超过80%的超时时间就警告
-                logger.warning(
-                    f"职位 {job_id} 请求耗时 {request_duration:.2f}秒 (接近超时)")
 
             if data and data.get('data', {}).get('jobDetails', {}).get('job'):
                 # 删除可能存在的旧文件
